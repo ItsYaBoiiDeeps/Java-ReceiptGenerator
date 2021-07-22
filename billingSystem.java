@@ -8,16 +8,20 @@ public class billingSystem {
 
 
     static Scanner in = new Scanner(System.in);
-    static HashMap<Integer, Double> menu = new HashMap<>();
-    static ArrayList<Double> price = new ArrayList<>();
-    static ArrayList<Integer> quantity = new ArrayList<>();
-    static ArrayList<String> item = new ArrayList<>();
 
+    //This HashMap links the serial number of the menu item to the key and the price of the item to the value, represented by integer and double respectively.
+    private static HashMap<Integer, Double> menu = new HashMap<>();
+    //These 3 ArrayList is to store and create one row of information in the receipt, for example -  Item QTY Price = Tea 2 $4.00
+    private static ArrayList<Double> price = new ArrayList<>();
+    private static ArrayList<Integer> quantity = new ArrayList<>();
+    private static ArrayList<String> item = new ArrayList<>();
+    //This is static variables that will be used to store the final values of my receipt
     private static double subtotal;
     private static double tax;
     private static double tip;
     private static double totalValue;
 
+    //Initialize the menu into the HashMap
     static {
         menu.put(1, 1.00);// coffee
         menu.put(2, 2.00);//tea
@@ -33,7 +37,7 @@ public class billingSystem {
         printBill();
     }
 
-
+    // A Simple method that prints out the contents on the menu
     private static void printMenu() {
         System.out.println("__________________________________");
         System.out.println("                       MENU                     ");
@@ -48,8 +52,12 @@ public class billingSystem {
         System.out.println("__________________________________");
     }
 
-    //    This method will loop through each other the user places until they are done
-    public static void getOrder() {
+    /*
+    This method will capture the user's order. One loop of this method captures one item order and the quantity.
+    It will capture the serialnumber of the item order and the quantity the user wants, which then gives the value to
+    the generateBill() method.  It will then proceed to ask if the users want to order anymore item until they are done.
+    */
+    private static void getOrder() {
         boolean done = true;
         while (done) {
             int serialNo = getSerialNo();
@@ -69,8 +77,8 @@ public class billingSystem {
         }
     }
 
-    // This method will capture the input of the Serial Number of the items on the menu
-    public static int getSerialNo() {
+    // This method is here to keep the code cleaner, when the user enters their order, this method will check if the serial number that the user has selected is valid before returning it to getOrder();
+    private static int getSerialNo() {
         boolean checkSerial = true;
         int serialNo = 0;
         while (checkSerial) {
@@ -91,8 +99,8 @@ public class billingSystem {
         return serialNo;
     }
 
-    //This method will capture the amount of items(quantity) of their order
-    public static int getQuantityItem() {
+    //This method will capture the amount of items(quantity) of their order and ensure that the quantity entered is a number before returning it to getOrder();
+    private static int getQuantityItem() {
         boolean checkQuantity = true;
         int quantityItem = 0;
         while (checkQuantity) {
@@ -109,8 +117,10 @@ public class billingSystem {
     }
 
 
-    //    This method will take the serial number and quantity per each item and add it to the arraylist to be used to print the receipt at the end
-    public static void generateBill(int serialNo, int quantityItem) {
+    // Within this method, it will generate the bill. Each loop of the getOrder() method will come here,
+//    it will provide the serial number and quantity, this generates one order which will be saved to the arraylist
+//    this will form one row of order within the bill
+    private static void generateBill(int serialNo, int quantityItem) {
         switch (serialNo) {
             case 1:
                 item.add("Coffee");
@@ -144,7 +154,10 @@ public class billingSystem {
         }
     }
 
-    public static void calculateBill() {
+
+//This part will do the maths and calculate the subtotal, tax and also ask the user how much they would like to tip and show them the minimum value
+// It will not accept any value below the minimum.
+    private static void calculateBill() {
         //Calculate subtotal
         subtotal = 0.00;
         for (int i = 0; i < price.size(); i++) {
@@ -177,7 +190,8 @@ public class billingSystem {
 
 
     //This method will generate the bill
-    public static void printBill() {
+    //The arraylist is iterated through to produce all the lines which shows the receipt
+    private static void printBill() {
         DecimalFormat twoPlaces = new DecimalFormat("0.00");
         System.out.println("____________________________________");
         System.out.println("                       RECEIPT                 ");
@@ -193,7 +207,7 @@ public class billingSystem {
         System.out.println("____________________________________");
         System.out.println("Subtotal                                  " + "$" + twoPlaces.format(subtotal));
         System.out.println("Tax(6.75%)                              " + "$" + twoPlaces.format(tax));
-        System.out.println("Tip                                         " + "$" + twoPlaces.format(tip));
+        System.out.println("Tip(10%)                                 " + "$" + twoPlaces.format(tip));
         System.out.println("TOTAL:                                 " + "$" + twoPlaces.format(totalValue));
     }
 
